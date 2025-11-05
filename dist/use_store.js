@@ -25,7 +25,14 @@ function useServerSyncedStore2(store) {
     }, [store]);
     return {
         data: state,
-        fetch: store.fetch
+        fetch: store.fetch,
+        add: store.add,
+        update: store.update,
+        remove: store.remove,
+        addMany: store.addMany,
+        dispose: store.dispose,
+        subscribe: store.subscribe,
+        setState: store.setState,
     };
 }
 //# sourceMappingURL=use_store.js.map

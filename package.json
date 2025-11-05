@@ -39,6 +39,6 @@
   },
   "homepage": "https://github.com/IsaiahTek/react-synq-store#readme",
   "dependencies": {
-    "synq-store": "^1.2.0"
+    "synq-store": "github:IsaiahTek/synq-store"
   }
 }

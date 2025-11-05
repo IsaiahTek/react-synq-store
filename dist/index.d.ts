@@ -1,4 +1,4 @@
-export type * from "synq-store";
+export type * from "synq-store/dist/types";
 export * from "synq-store";
 export { SynqStore } from "synq-store";
 export { Store } from "synq-store";
