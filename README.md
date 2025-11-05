@@ -279,7 +279,6 @@ function JobList({ filter }: { filter?: string }) {
 
 | Feature | React-Synq-Store | Redux | Zustand | React Query |
 |---------|------------------|-------|---------|-------------|
-| Bundle Size | ~3KB | ~15KB | ~3KB | ~40KB |
 | Server Sync | ✅ Built-in | ❌ Manual | ❌ Manual | ✅ Built-in |
 | Optimistic Updates | ✅ Automatic | ❌ Manual | ❌ Manual | ✅ Manual |
 | Local State | ✅ | ✅ | ✅ | ❌ |

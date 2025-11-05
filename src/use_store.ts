@@ -18,3 +18,25 @@ export function useServerSyncedStore<T extends { id: string }>(store: SynqStore<
   }, [store]);
   return state;
 }
+
+export function useServerSyncedStore2<T extends { id: string }>(store: SynqStore<T>) {
+  const state = useStore(store);
+  
+  useEffect(() => {
+    if (store.status === "idle") {
+      store.fetch();
+    }
+  }, [store]);
+
+  return {  
+    data: state,
+    fetch: store.fetch,
+    add: store.add,
+    update: store.update,
+    remove: store.remove,
+    addMany: store.addMany,
+    dispose: store.dispose,
+    subscribe: store.subscribe,
+    setState: store.setState,
+  };
+}
