@@ -2,11 +2,11 @@ import { Store, SynqStore } from "synq-store";
 export declare function useStore<T>(store: Store<T>): T | T[] | null;
 export declare function useServerSyncedStore<T extends {
     id: string;
-}, B>(store: SynqStore<T, B>): Partial<T> | Partial<T>[];
+}, B>(store: SynqStore<T, B>): T[];
 export declare function useServerSyncedStore2<T extends {
     id: string;
 }, B>(store: SynqStore<T, B>): {
-    data: Partial<T> | Partial<T>[] | null;
+    data: T[];
     fetch: () => Promise<void>;
     add: (item: Partial<T>, xId?: B | undefined) => Promise<void>;
     update: (item: T) => Promise<void>;
