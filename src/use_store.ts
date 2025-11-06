@@ -1,7 +1,7 @@
 import { useEffect, useSyncExternalStore } from "react";
-import { Store, SynqStore } from "synq-store/dist/types";
+import { Store, SynqStore } from "synq-store";
 
-export function useStore<T>(store: Store<T>): T {
+export function useStore<T>(store: Store<T>): T | T[] | null {
   return useSyncExternalStore(
     (cb) => store.subscribe(cb),
     () => store.snapshot,
@@ -9,17 +9,17 @@ export function useStore<T>(store: Store<T>): T {
   );
 }
 
-export function useServerSyncedStore<T extends { id: string }>(store: SynqStore<T>) {
+export function useServerSyncedStore<T extends { id: string }, B>(store: SynqStore<T, B>) {
   const state = useStore(store);
   useEffect(() => {
     if (store.status === "idle") {
       store.fetch();
     }
   }, [store]);
-  return state;
+  return state!;
 }
 
-export function useServerSyncedStore2<T extends { id: string }>(store: SynqStore<T>) {
+export function useServerSyncedStore2<T extends { id: string }, B>(store: SynqStore<T, B>) {
   const state = useStore(store);
   
   useEffect(() => {
