@@ -8,7 +8,7 @@
     "typescript": "^5.9.3"
   },
   "name": "react-synq-store",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A minimal reactive state management plugin for React.js and Next.js apps.",
   "main": "dist/index.js",
   "scripts": {
