@@ -19,7 +19,7 @@ export function useServerSyncedStore<T extends { id: string }, B>(store: SynqSto
   return state as T[];
 }
 
-export function useServerSyncedStore2<T extends { id: string }, B>(store: SynqStore<T, B>) {
+export function useServerSyncedStoreWithExtras<T extends { id: string }, B>(store: SynqStore<T, B>) {
   const state = useStore(store);
   
   useEffect(() => {
@@ -38,5 +38,9 @@ export function useServerSyncedStore2<T extends { id: string }, B>(store: SynqSt
     dispose: store.dispose,
     subscribe: store.subscribe,
     setState: store.setState,
+    isLoading: store.status === "loading",
+    isIdle: store.status === "idle",
+    isError: store.status === "error",
+    isSuccess: store.status === "success"
   };
 }

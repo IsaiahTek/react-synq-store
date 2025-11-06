@@ -3,7 +3,7 @@ export declare function useStore<T>(store: Store<T>): T | T[] | null;
 export declare function useServerSyncedStore<T extends {
     id: string;
 }, B>(store: SynqStore<T, B>): T[];
-export declare function useServerSyncedStore2<T extends {
+export declare function useServerSyncedStoreWithExtras<T extends {
     id: string;
 }, B>(store: SynqStore<T, B>): {
     data: T[];
@@ -15,4 +15,8 @@ export declare function useServerSyncedStore2<T extends {
     dispose: () => void;
     subscribe: (listener: import("synq-store").Listener<T | T[]>) => () => boolean;
     setState: (next: T | T[]) => void;
+    isLoading: boolean;
+    isIdle: boolean;
+    isError: boolean;
+    isSuccess: boolean;
 };

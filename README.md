@@ -12,13 +12,13 @@ It's built on top of [synq-store](https://github.com/IsaiahTek/synq-store) and p
 
 ## Features
 
-* **React Hooks:** Simple `useStore` and `useServerSyncedStore` hooks for effortless state management.
-* **Optimistic Updates:** Experience instant UI updates on `add`, `update`, and `remove` operations, with automatic rollback on failure.
-* **Server Synchronization:** The **`SynqStore`** handles data fetching, caching, and server mutations out of the box.
-* **Interval Re-fetching:** Keep data fresh with automatic background fetching on a defined interval.
-* **Next.js Ready:** Works seamlessly with Next.js App Router and Server Components.
-* **TypeScript First:** Fully typed for an excellent developer experience.
-* **Zero Configuration:** Works out of the box with sensible defaults.
+- **React Hooks:** Simple `useStore` and `useServerSyncedStore` hooks for effortless state management.
+- **Optimistic Updates:** Experience instant UI updates on `add`, `update`, and `remove` operations, with automatic rollback on failure.
+- **Server Synchronization:** The **`SynqStore`** handles data fetching, caching, and server mutations out of the box.
+- **Interval Re-fetching:** Keep data fresh with automatic background fetching on a defined interval.
+- **Next.js Ready:** Works seamlessly with Next.js App Router and Server Components.
+- **TypeScript First:** Fully typed for an excellent developer experience.
+- **Zero Configuration:** Works out of the box with sensible defaults.
 
 ---
 
@@ -42,14 +42,14 @@ pnpm add react-synq-store
 ### Basic Local State Management
 
 ```typescript
-import { Store, useStore } from 'react-synq-store';
+import { Store, useStore } from "react-synq-store";
 
 // Create a store
 const counterStore = new Store({ count: 0 });
 
 function Counter() {
   const state = useStore(counterStore);
-  
+
   return (
     <div>
       <p>Count: {state.count}</p>
@@ -64,7 +64,7 @@ function Counter() {
 ### Server State Synchronization
 
 ```typescript
-import { SynqStore, useServerSyncedStore } from 'react-synq-store';
+import { SynqStore, useServerSyncedStore } from "react-synq-store";
 
 // Define your data type
 interface Todo {
@@ -76,39 +76,39 @@ interface Todo {
 // Create a SynqStore
 const todosStore = new SynqStore<Todo>([], {
   fetcher: async () => {
-    const response = await fetch('/api/todos');
+    const response = await fetch("/api/todos");
     return response.json();
   },
   add: async (todo) => {
-    const response = await fetch('/api/todos', {
-      method: 'POST',
+    const response = await fetch("/api/todos", {
+      method: "POST",
       body: JSON.stringify(todo),
     });
     return response.json();
   },
   update: async (id, updates) => {
     const response = await fetch(`/api/todos/${id}`, {
-      method: 'PATCH',
+      method: "PATCH",
       body: JSON.stringify(updates),
     });
     return response.json();
   },
   remove: async (id) => {
-    await fetch(`/api/todos/${id}`, { method: 'DELETE' });
+    await fetch(`/api/todos/${id}`, { method: "DELETE" });
   },
 });
 
 function TodoList() {
   const todos = useServerSyncedStore(todosStore);
-  
+
   const handleAdd = async () => {
-    await todosStore.add({ title: 'New Todo', completed: false });
+    await todosStore.add({ title: "New Todo", completed: false });
   };
-  
+
   const handleToggle = async (id: string, completed: boolean) => {
     await todosStore.update(id, { completed: !completed });
   };
-  
+
   return (
     <div>
       <button onClick={handleAdd}>Add Todo</button>
@@ -138,18 +138,27 @@ function TodoList() {
 A `Store` is a simple container for local state that can be shared across components:
 
 ```typescript
-import { Store } from 'react-synq-store';
+import { Store } from "react-synq-store";
 
 const uiStore = new Store({
-  theme: 'light',
+  theme: "light",
   sidebarOpen: false,
 });
 
 // Update state
-uiStore.setState({ theme: 'dark' });
+uiStore.setState({ theme: "dark" });
 
 // Get current state
 const currentState = uiStore.getState();
+```
+
+Note: Store can either be typed as single item or a list of items (i.e)
+
+```typescript
+new Store<Item>(); // For single item
+
+// OR
+new Store<Item[]>(); // For list of items
 ```
 
 ### SynqStore
@@ -157,7 +166,7 @@ const currentState = uiStore.getState();
 A `SynqStore` extends `Store` with server synchronization capabilities:
 
 ```typescript
-import { SynqStore } from 'react-synq-store';
+import { SynqStore } from "react-synq-store";
 
 const store = new SynqStore<ItemType>(initialData, {
   fetcher: () => fetchFromServer(),
@@ -166,6 +175,17 @@ const store = new SynqStore<ItemType>(initialData, {
   remove: (id) => deleteOnServer(id),
   refetchInterval: 30000, // Optional: auto-refetch every 30s
 });
+```
+
+Note: While Store can accept array type or single type, SynqStore doesn't expect you to use array as type.
+It automatically types any type into an array behind the scene. Hence, you get a list of the type you specified.
+
+```typescript
+new SynqStore<Item[], ...>(...)   // X : VERY WRONG
+
+// Correct way
+new SynqStore<Item, ...>(...)     // CORRECT
+
 ```
 
 ---
@@ -205,12 +225,32 @@ Check if a `SynqStore` has finished initial fetching:
 if (myStore.isSuccess) {
   // Data is ready
 }
-if(myStore.isLoading){
-    // 
+if (myStore.isLoading) {
+  //
 }
-if(myStore.isError){
-    // The most recent server action threw an error
+if (myStore.isError) {
+  // The most recent server action threw an error
 }
+```
+
+### `useServerSyncedStoreWithActions` for using advanced actions [OPTIONAL]
+
+```typescript
+const {
+  data: items,
+  fetch,
+  add,
+  update,
+  remove,
+  addMany,
+  dispose,
+  subscribe,
+  setState,
+  isLoading,
+  isIdle,
+  isError,
+  isSuccess,
+} = useServerSyncedStoreWithExtras(itemsStore);
 ```
 
 ---
@@ -220,46 +260,47 @@ if(myStore.isError){
 Here's a complete example with error handling and loading states:
 
 ```typescript
-import { SynqStore, useServerSyncedStore } from 'react-synq-store';
+import { SynqStore, useServerSyncedStore } from "react-synq-store";
 
 interface Job {
   id: string;
   title: string;
-  status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+  status: "open" | "in_progress" | "completed" | "cancelled";
 }
 
 const jobsStore = new SynqStore<Job>([], {
-  fetcher: () => fetch('/api/jobs').then(r => r.json()),
-  add: (job) => fetch('/api/jobs', {
-    method: 'POST',
-    body: JSON.stringify(job),
-  }).then(r => r.json()),
+  fetcher: () => fetch("/api/jobs").then((r) => r.json()),
+  add: (job) =>
+    fetch("/api/jobs", {
+      method: "POST",
+      body: JSON.stringify(job),
+    }).then((r) => r.json()),
 });
 
 function JobList({ filter }: { filter?: string }) {
   const jobs = useServerSyncedStore(jobsStore);
-  
+
   const filteredJobs = jobs.filter((job) => {
-    if (!filter || filter === 'all') return true;
+    if (!filter || filter === "all") return true;
     return job.status === filter;
   });
-  
+
   const handleCreateJob = async () => {
     try {
       await jobsStore.add({
-        title: 'New Job',
-        status: 'open',
+        title: "New Job",
+        status: "open",
       });
     } catch (error) {
-      console.error('Failed to create job:', error);
+      console.error("Failed to create job:", error);
       // The optimistic update is automatically rolled back
     }
   };
-  
+
   if (jobsStore.isLoading) {
     return <div>Loading jobs...</div>;
   }
-  
+
   return (
     <div>
       <button onClick={handleCreateJob}>Create Job</button>
@@ -277,13 +318,13 @@ function JobList({ filter }: { filter?: string }) {
 
 ## Comparison with Other Libraries
 
-| Feature | React-Synq-Store | Redux | Zustand | React Query |
-|---------|------------------|-------|---------|-------------|
-| Server Sync | ✅ Built-in | ❌ Manual | ❌ Manual | ✅ Built-in |
-| Optimistic Updates | ✅ Automatic | ❌ Manual | ❌ Manual | ✅ Manual |
-| Local State | ✅ | ✅ | ✅ | ❌ |
-| TypeScript | ✅ First-class | ✅ | ✅ | ✅ |
-| Learning Curve | Low | High | Low | Medium |
+| Feature            | React-Synq-Store | Redux     | Zustand   | React Query |
+| ------------------ | ---------------- | --------- | --------- | ----------- |
+| Server Sync        | ✅ Built-in      | ❌ Manual | ❌ Manual | ✅ Built-in |
+| Optimistic Updates | ✅ Automatic     | ❌ Manual | ❌ Manual | ✅ Manual   |
+| Local State        | ✅               | ✅        | ✅        | ❌          |
+| TypeScript         | ✅ First-class   | ✅        | ✅        | ✅          |
+| Learning Curve     | Low              | High      | Low       | Medium      |
 
 ---
 
@@ -310,9 +351,11 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 Built with ❤️ by [IsaiahTek](https://github.com/IsaiahTek)
 
 ### Follow Me
+
 [Linked](https://linkedin.com/in/isaiah-pius)
 
 [X (Twitter)](https://x.com/IsaiahCodes)
 
 ## Sponsorship
+
 Kindly [Donate](https://github.com/sponsors/IsaiahTek) to help me continue authoring and maintaining all my open source projects.
