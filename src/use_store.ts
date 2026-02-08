@@ -12,7 +12,7 @@ export function useStore<T>(store: Store<T>): T | T[] | null {
 export function useServerSyncedStore<T extends { id: string }, B>(store: SynqStore<T, B>): T[] {
   const state = useStore(store);
   useEffect(() => {
-    if (store.status === "idle") {
+    if (store.isIdle) {
       store.fetch();
     }
   }, [store]);
