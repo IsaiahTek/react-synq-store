@@ -9,7 +9,7 @@ export function useStore<T>(store: Store<T>): T | T[] | null {
   );
 }
 
-export function useServerSyncedStore<T extends { id: string }, B>(store: SynqStore<T, B>) : T[] {
+export function useServerSyncedStore<T extends { id: string }, B>(store: SynqStore<T, B>): T[] {
   const state = useStore(store);
   useEffect(() => {
     if (store.status === "idle") {
@@ -21,14 +21,14 @@ export function useServerSyncedStore<T extends { id: string }, B>(store: SynqSto
 
 export function useServerSyncedStoreWithExtras<T extends { id: string }, B>(store: SynqStore<T, B>) {
   const state = useStore(store);
-  
+
   useEffect(() => {
     if (store.status === "idle") {
       store.fetch();
     }
   }, [store]);
 
-  return {  
+  return {
     data: state as T[],
     fetch: store.fetch,
     add: store.add,

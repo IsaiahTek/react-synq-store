@@ -9,12 +9,12 @@ export declare function useServerSyncedStoreWithExtras<T extends {
     data: T[];
     fetch: () => Promise<void>;
     add: (item: Partial<T>, xId?: B | undefined) => Promise<void>;
-    update: (item: T) => Promise<void>;
-    remove: (id: string) => Promise<void>;
+    update: (item: Partial<T> | ((state: T) => T), key?: string) => Promise<void>;
+    remove: (input: string | ((item: T) => boolean)) => Promise<void>;
     addMany: (items: T[]) => Promise<void>;
     dispose: () => void;
-    subscribe: (listener: import("synq-store").Listener<T | T[]>) => () => boolean;
-    setState: (next: T | T[]) => void;
+    subscribe: (listener: import("synq-store").Listener<T | T[] | null>) => () => boolean;
+    setState: (next: T | T[] | null) => void;
     isLoading: boolean;
     isIdle: boolean;
     isError: boolean;
