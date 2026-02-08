@@ -10,7 +10,7 @@ function useStore(store) {
 function useServerSyncedStore(store) {
     const state = useStore(store);
     (0, react_1.useEffect)(() => {
-        if (store.status === "idle") {
+        if (store.isIdle) {
             store.fetch();
         }
     }, [store]);
